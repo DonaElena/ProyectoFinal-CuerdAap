@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sobre nosotros{% endblock %}
+
+{% block content %}
+
+<section id="terms-of-service" class="terms-of-service section">
+    <div class="container" data-aos="fade-up">
+
+        <!-- Page Header -->
+        <div class="tos-header text-center" data-aos="fade-up">
+            <h2>Sobre nosotros y la app</h2>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="tos-content" data-aos="fade-up" data-aos-delay="200">
+
+            <!-- Quiénes somos -->
+            <div id="quienes_somos" class="content-section">
+                <h3>¿Quiénes somos?</h3>
+                <div class="text-block">
+                    {{ quienes_somos|linebreaks }}
+                </div>
+            </div>
+
+            <!-- Nuestra filosofía -->
+            <div id="filosofia" class="content-section">
+                <h3>Nuestra filosofía</h3>
+                <div class="text-block">
+                    {{ filosofia|linebreaks }}
+                </div>
+            </div>
+
+            <!-- Valores técnicos -->
+            <div id="valores_tecnicos" class="content-section">
+                <h3>Valores técnicos</h3>
+                <div class="text-block">
+                    {{ valores_tecnicos|linebreaks }}
+
+                    <div class="alert-box">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <div class="alert-content">
+                            <h5>Recuerda siempre</h5>
+                            <p>Perfecciona todas tus técnicas y protocolos de seguridad en montaña</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Valores ambientales -->
+            <div id="valores_ambientales" class="content-section">
+                <h3>Valores ambientales</h3>
+                <div class="text-block">
+                    {{ valores_ambientales|linebreaks }}
+
+                    <div class="prohibited-list">
+                        <div class="prohibited-item">
+                            <i class="bi bi-x-circle"></i>
+                            <span>Evita dejar cualquier tipo de desecho</span>
+                        </div>
+                        <div class="prohibited-item">
+                            <i class="bi bi-x-circle"></i>
+                            <span>Haz el ruido necesario, no en exceso</span>
+                        </div>
+                        <div class="prohibited-item">
+                            <i class="bi bi-x-circle"></i>
+                            <span>Respeta las restricciones por nidificación u otros</span>
+                        </div>
+                        <div class="prohibited-item">
+                            <i class="bi bi-x-circle"></i>
+                            <span>Respeta las restricciones por sequía y fuegos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contacto -->
+            <div class="tos-contact" data-aos="fade-up" data-aos-delay="300">
+                <div class="contact-box">
+                    <div class="contact-icon">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+                    <div class="contact-content">
+                        <h3>Te gustaría contactarnos</h3>
+                        <p>Puedes contactar con nosotros a través del formulario de contacto.</p>
+                        <div class="contact-link-wrapper">
+                            <a href="{% url 'formulario_contacto' %}" class="contact-link">Contactar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- /tos-content -->
+    </div> <!-- /container -->
+</section>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Solicitud de reserva{% endblock %}
+
+{% block content %}
+<section id="contact" class="contact section">
+
+    <div class="container">
+        <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="300">
+            <div class="col-lg-10">
+                <div class="contact-form-wrapper">
+                    {% if solicitud_enviada %}
+                    <div class="alert alert-success text-center">
+                        Tu solicitud ha sido enviada correctamente.
+                        Espera la respuesta de la cordada.
+                    </div>
+                    {% else %}
+                    <h2 class="text-center mb-4">Indica las plazas que quieres reservar y tu solicitud estará lista</h2>
+                    <form action="" method="post" class="django-email-form">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger mb-3">
+                                {% for error in form.non_field_errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="row g-3">
+
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label class="form-label d-flex align-items-center">
+                                        <i class="bi bi-pencil me-2"></i><strong>¿Cuántas plazas quieres reservar?</strong>
+                                    </label>
+                                    {{ form.numero_plazas }}
+                                    {% if form.numero_plazas.errors %}
+                                        <div class="text-danger mt-1">
+                                            {% for error in form.numero_plazas.errors %}
+                                                <p>{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-12 text-center mt-3">
+                                <button type="submit" class="btn btn-primary btn-submit">Enviar solicitud</button>
+                            </div>
+                            {% endif %}
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

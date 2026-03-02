@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalles del viaje{% endblock %}
+
+{% block content %}
+    <section id="travel-detail" class="travel-booking section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="booking-form-container">
+                {{ mapa|safe }}
+            </div>
+            <div class="booking-form-container">
+              {% if es_propietario %}
+              <h2>Personas que te acompañanan</h2>
+              {% else %}
+              <h2>Personas con las que vas a compartir el viaje</h2>
+              {% endif %}
+
+            <ul>
+{% for perfil in perfiles %}
+  <li>
+    <a href="{% url 'perfil-detail' perfil.usuario_id %}"
+       title="Perfil de {{ perfil }}"
+       class="perfil-link">
+       {{ perfil }} (Ir a su perfil)
+    </a>
+  </li>
+{% empty %}
+  <li>No hay personas registradas aún.</li>
+{% endfor %}
+</ul>
+
+
+
+
+            </div>
+          </div>
+
+
+          <div class="col-lg-4">
+            <div class="booking-summary" data-aos="fade-up" data-aos-delay="400">
+              <div class="summary-header">
+                <h4>Detalles del viaje</h4>
+              </div>
+
+              <div class="booking-details">
+                <div class="detail-item">
+                  <span class="label">Desde: </span>
+                  <span class="value">{{ viaje.ciudad_salida_corto }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Hacia: </span>
+                  <span class="value">{{ viaje.ciudad_llegada_corto }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Fecha:</span>
+                  <span class="value">{{ viaje.fecha_salida }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Hora:</span>
+                  <span class="value">{{ viaje.hora }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Plazas:</span>
+                  <span class="value">{{ viaje.plazas_disponibles }}</span>
+                </div>
+              </div>
+
+              <div class="price-breakdown">
+                <div class="price-item">
+                  <span class="description">Acepto mascotas</span>
+                     {% if viaje.acepto_mascotas == 'N' %}
+                    <span class="amount">No</span>
+                    {% else %}
+                    <span class="amount">Sí</span>
+                    {% endif %}
+                </div>
+                <div class="price-item">
+                  <span class="description">Vuelvo el mismo día</span>
+                    {% if viaje.regreso_hoy == 'N' %}
+                    <span class="amount">No</span>
+                    {% else %}
+                    <span class="amount">Sí</span>
+                    {% endif %}
+                </div>
+                <div class="price-item">
+                  <span class="description">Nombre del sector</span>
+                  <span class="amount">{{ viaje.nombre_sector }}</span>
+                </div>
+                <div class="price-item tax-item">
+                  <span class="description">Nivel de escalada</span>
+                  <span class="amount">{{ viaje.nivel_escalada }}</span>
+                </div>
+
+              </div>
+
+              <div class="help-section">
+                {% if es_propietario %}
+                <h4>Palabras para quien viaja contigo</h4>
+                {% else %}
+                <h4>Unas palabras para la cordada</h4>
+                {% endif %}
+                <span class="description">{{ viaje.descripcion_viaje }}</span>
+                <div class="support-hours">
+                  {% if not tiene_reserva and es_propietario %}
+                  <a href="{% url 'viaje-editar' viaje.pk %}" class="btn-accent-bottom">Editar Viaje</a>
+                  <a href="" class="btn-accent-bottom" data-bs-toggle="modal" data-bs-target="#modalDelete{{viaje.pk}}">Cancelar viaje</a>
+                  {% endif %}
+
+                  {% if not es_propietario and request.user.is_authenticated %}
+                    <a href="{% url 'perfil-detail' viaje.propietario_vehiculo.usuario.id %}" class="btn-accent-bottom">
+                      Ver perfil de quien conduce</a>
+                  {% endif %}
+                  {% if not request.user.is_authenticated %}
+                  <a href="{% url 'account_login'  %}" class="btn-accent-bottom">
+                      Login para ver perfil </a>
+
+                  {% endif %}
+
+                  <br><br>
+
+                  {% if es_propietario %}
+                  <p class="text-danger">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    No se podrá cancelar ni editar el viaje si ya has aceptado reservas.</p>
+                  <p class="text-danger">
+                    Para cualquier cambio o cancelación tendrás que contactar a los/as pasajero/as.</p>
+                  {% endif %}
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      {% include 'viajes/viajeoferta_cancelar.html' %}
+
+
+    </section>
+
+{% endblock content %}
+
+

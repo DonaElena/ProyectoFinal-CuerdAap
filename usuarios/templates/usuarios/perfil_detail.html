@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Perfil{% endblock %}
+
+{% block content %}
+<div class="perfil-dashboard container py-5">
+    <div class="row">
+        {% if es_propietario %}
+      <h1>Bienvenido/a {{ perfil.usuario.first_name }}  </h1>
+        {% else %}
+      <h1>Perfil de {{ perfil.usuario.first_name }}  </h1>
+        {% endif %}
+
+
+        <!-- Sidebar -->
+        <aside class="col-lg-3 mb-4">
+            <div class="sidebar-card p-3 text-center">
+                <div class="profile-pic mb-3">
+                    {% if perfil.get_sexo_display == 'Masculino' %}
+                    <img src="{% static 'img/profile-boy-icon.png' %}" alt="Foto de perfil" class="img-fluid rounded-circle">
+                    {% else %}
+                    <img src="{% static 'img/profile-girl-icon.png' %}" alt="Foto de perfil" class="img-fluid rounded-circle">
+                    {% endif %}
+                </div>
+                <h4>{{ perfil.nombre }} {{ perfil.apellidos }}</h4>
+                <div>
+                    <div class="d-flex flex-column gap-3 mt-4">
+
+                        {% if es_propietario %}
+                        <a href="{% url 'account_change_password' %}" class="btn mt-3 w-100">
+                            Cambiar contraseña
+                        </a>
+                        <a href="{% url 'account_logout' %}" class="btn btn-danger mt-3 w-100">
+                            Cerrar sesión
+                        </a>
+                        <a href="{% url 'perfil-editar' request.user.id %}" class="btn btn-danger mt-3 w-100">
+                            Editar Perfil
+                        </a>
+                        {% comment %}
+                        <a href="{% url 'perfil-eliminar' request.user.id %}" class="btn btn-danger mt-3 w-100">
+                            {% endcomment %}
+                        <a href="" class="btn btn-danger mt-3 w-100" data-bs-toggle="modal" data-bs-target="#modalDelete{{request.user.id}}">
+                            Eliminar Perfil
+                        </a>
+                        {% else %}
+                        <a href="{% url 'perfil-detail' request.user.id %}" class="btn mt-3 w-100">
+                            Volver a mi perfil
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+
+            <!-- Datos Personales -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Datos Personales</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Nombre:</strong> {{ perfil.usuario.first_name }}</p>
+                    <p><strong>Apellidos:</strong> {{ perfil.usuario.last_name }}</p>
+                    {% if es_propietario or van_a_compartir_viaje %}
+                    <p><strong>Email:</strong> {{ perfil.usuario.email }}</p>
+                    <p><strong>Teléfono:</strong> {{ perfil.telefono }}</p>
+                    {% endif %}
+                    <p><strong>Edad:</strong> {{ perfil.edad }} años</p>
+                    <p><strong>Sexo:</strong> {{ perfil.get_sexo_display }}</p>
+                </div>
+            </div>
+
+             {% if perfil.descripcion %}
+             <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Sobre mí</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ perfil.descripcion }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Datos de Escalada -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Datos de Escalada</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Empece a escalar en roca el:</strong> {{ perfil.inicio_escalada }} ({{ perfil.tiempo_escalando }} años escalando)</p>
+                    <p><strong>Material propio:</strong> {{ perfil.get_material_propio_display }}</p>
+                    {% if perfil.perfil_8anu %}
+                    <p><strong>Perfil 8a.nu:</strong><a href="{{ perfil.perfil_8anu }}" target="_blank">{{ perfil.perfil_8anu }}</a></p>
+                    {% endif %}
+                </div>
+            </div>
+
+             <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Estoy disponible para recibir a gente en casa</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ perfil.get_recibir_gente_display }}</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+                                                            {% include 'usuarios/perfil_eliminar.html' %}
+
+<section id="blog-comments" class="blog-comments section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="blog-comments-4">
+            <div class="comments-header">
+                <h3 class="title">Opiniones sobre mí</h3>
+            </div>
+            {% if hay_comentarios %}
+                {% for comentario in comentarios %}
+                    <div class="comments-container">
+                        <div class="comment-thread">
+                            <div class="comment-box">
+                                <div class="comment-wrapper" data-comment-id="{{ comentario.id }}">
+                                    <div class="avatar-wrapper">
+                                        {% if perfil.get_sexo_display == 'Masculino' %}
+                                        <img src="{% static 'img/profile-boy-icon.png' %}" alt="Avatar" loading="lazy">
+                                        {% else %}
+                                        <img src="{% static 'img/profile-girl-icon.png' %}" alt="Avatar" loading="lazy">
+                                        {% endif %}
+                                    </div>
+                                    <div class="comment-content">
+                                        <div class="comment-header">
+                                            <div class="user-info">
+                                                <h4>{{ comentario.usuario.first_name }} {{ comentario.usuario.last_name }}</h4>
+                                                <span class="time-badge">
+                                                    <i class="bi bi-clock"></i>
+                                                    {{ comentario.tiempo_transcurrido }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="comment-body">
+                                            <p>{{ comentario.comentario }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                {% endfor %}
+            {% else %}
+                <h4>Aún no hay opiniones sobre este usuario</h4>
+            {% endif %}
+
+{% if not es_propietario %}
+<section id="blog-comment-form" class="blog-comment-form section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <form method="post" action="">
+            {% csrf_token %}
+            <div class="section-header">
+            <h3>Opina sobre tu experiencia con este/a usuario/a</h3>
+            </div>
+          <div class="row gy-3">
+            <div class="col-12 form-group">
+                {{ form.comentario }}
+            </div>
+            <div class="col-12 text-center">
+              <button type="submit" class="btn-submit">Dejar comentario</button>
+            </div>
+          </div>
+        </form>
+    </div>
+</section>
+
+
+
+
+
+
+{% endif %}
+
+{% endblock %}
+

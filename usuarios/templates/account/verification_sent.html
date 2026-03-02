@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Confirmar email" %}{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <div class="card shadow-lg rounded-4 p-5 mx-auto" style="max-width: 600px;">
+        <h2 class="mb-4 text-primary">{% trans "Confirma tu correo electrónico" %}</h2>
+
+        <p class="mb-4">
+            Hemos enviado un correo de confirmación a tu e-mail
+        </p>
+        <p class="mb-4">
+            Revisa la bandeja de entrada, en caso de que no esté ahí revisa en correo no deseado
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load allauth i18n %}
+{% load allauth i18n socialaccount static %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<section id="travel-tour-details" class="travel-tour-details section">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="booking-section" id="booking" data-aos="fade-up" data-aos-delay="600">
+      <div class="booking-card">
+        <h2>Login</h2>
+
+        {% if not SOCIALACCOUNT_ONLY %}
+          {% url 'account_login' as login_url %}
+          {% element form form=form method="post" action=login_url tags="entrance,login" %}
+            {% slot body %}
+              {% csrf_token %}
+              {% element fields form=form unlabeled=True %}
+              {% endelement %}
+              {{ redirect_field }}
+            {% endslot %}
+            {% slot actions %}
+              <button type="submit" class="btn-submit">Login</button>
+            {% endslot %}
+          {% endelement %}
+        {% endif %}
+
+        <p>
+          Si no has creado una cuenta aún, por favor
+            <a href="{{ signup_url }}">regístrate</a>
+        </p>
+
+        {% if SOCIALACCOUNT_ENABLED %}
+          <div class="social-login">
+            <a href="{% provider_login_url 'google' process='login' %}" class="btn-google">
+              <img width="48" height="48" src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo"/>
+              <strong> Inicio de sesión con Google </strong>
+            </a>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Reservas
+{% endblock %}
+
+{% block content %}
+<section id="blog-comments" class="blog-comments section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="blog-comments-4">
+          <div class="comments-header">
+              <h3 class="title">Reservas</h3>
+          </div>
+
+          {% if tiene_reservas %}
+
+            {% if reservas_en_mi_viaje %}
+
+            <h4>Reservas en tus viajes </h4>
+
+          {% for reserva in reservas_en_mi_viaje %}
+          <h4>{{ reserva.quien_reserva.nombre }}</h4>
+
+          <div class="comments-container">
+            <div class="comment-thread">
+              <div class="comment-box">
+                <div class="comment-wrapper">
+                  <div class="avatar-wrapper">
+                      {% if reserva.quien_reserva.get_sexo_display == 'Masculino' %}
+                      <img src="{% static 'img/profile-boy-icon.png' %}" alt="Avatar" loading="lazy">
+                      {% else %}
+                      <img src="{% static 'img/profile-girl-icon.png' %}" alt="Avatar" loading="lazy">
+                      {% endif %}
+                  </div>
+                  <div class="comment-content">
+                    <div class="comment-header">
+                      <div class="user-info">
+                        <h4>
+                         {{ reserva.viaje.ciudad_salida_corto }}
+                          <i class="bi bi-arrow-right mx-2"></i>
+                          {{ reserva.viaje.ciudad_llegada_corto }}
+                          </h4>
+                          <span class="time-badge">
+                          <i class="bi bi-clock"></i>
+                            {{ reserva.viaje.hora }}
+                           &nbsp
+                          <i class="bi bi-calendar"></i>
+                          {{ reserva.viaje.fecha_salida }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="comment-body d-flex justify-content-between align-items-center">
+                        <p>
+                            <strong>Número de plazas solicitadas: {{ reserva.numero_plazas }}</strong>
+                        </p>
+
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'perfil-detail' reserva.quien_reserva.usuario.id %}"
+                               class="btn-accent-bottom">
+                              Ver perfil
+                            </a>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+              {% endif %}
+
+              {% if yo_reserve %}
+
+              <h4>Viajes en los que he reservado plaza/s</h4>
+
+          {% for reserva in yo_reserve %}
+          <div class="comments-container">
+            <div class="comment-thread">
+              <div class="comment-box">
+                <div class="comment-wrapper">
+                  <div class="comment-content">
+                    <div class="comment-header">
+                      <div class="user-info">
+                        <h4>
+                         {{ reserva.viaje.ciudad_salida_corto }}
+                          <i class="bi bi-arrow-right mx-2"></i>
+                          {{ reserva.viaje.ciudad_llegada_corto }}
+                          </h4>
+                          <span class="time-badge">
+                          <i class="bi bi-clock"></i>
+                            {{ reserva.viaje.hora }}
+                           &nbsp
+                          <i class="bi bi-calendar"></i>
+                          {{ reserva.viaje.fecha_salida }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="comment-body d-flex justify-content-between align-items-center">
+                        <p>
+                            <strong>Número de plazas solicitadas: {{ reserva.numero_plazas }}</strong>
+                        </p>
+
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'viaje-detail-no-propietario' reserva.viaje.id %}"
+                           class="btn-accent-bottom">
+                          Ver viaje
+                        </a>
+                        <a href="{% url 'perfil-detail' reserva.viaje.propietario_vehiculo.usuario_id %}"
+                           class="btn-accent-bottom">
+                          Ver perfil conductor/a
+                        </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+              {% endif %}
+
+          {% else %}
+                <h4>Aún no tienes ninguna reserva</h4>
+          {% endif %}
+
+        </div>
+    </div>
+</section>
+{% endblock %}

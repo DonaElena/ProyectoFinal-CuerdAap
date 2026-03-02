@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+{% if modo_edicion %}
+Edita tu viaje
+{% else %}
+Crea tu viaje
+{% endif %}
+{% endblock %}
+
+{% block content %}
+    <section id="travel-booking" class="travel-booking section">
+
+        <form action="" method="post" class="booking-form" data-aos="fade-up" data-aos-delay="300" novalidate>
+            {% csrf_token %}
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        {% if modo_edicion %}
+                        <h1>Parece que cambiamos de sector!!</h1>
+                        {% else %}
+                        <h1>¿A dónde nos vamos a escalar?</h1>
+                        {% endif %}
+                        <div class="booking-form-container mt-5">
+                            <div class="booking-progress nav nav-tabs" data-aos="fade-up" data-aos-delay="200">
+                                <button type = "button" class="step nav-link active" data-bs-toggle="tab" data-bs-target="#travel-booking-step-1" aria-current="page">
+                                    <span class="step-number">1</span>
+                                    <span class="step-title">Datos del viaje</span>
+                                </button>
+                                <button type = "button" class="step nav-link" data-bs-toggle="tab" data-bs-target="#travel-booking-step-2">
+                                    <span class="step-number">2</span>
+                                    <span class="step-title">Datos de escalada</span>
+                                </button>
+                                <button type = "button" class="step nav-link" data-bs-toggle="tab" data-bs-target="#travel-booking-step-3">
+                                    <span class="step-number">3</span>
+                                    <span class="step-title">Algunas palabras para los viajeros</span>
+                                </button>
+                            </div>
+
+                            <div class="tab-content" id="bookingTabContent">
+                                <div class="form-step tab-pane fade show active" id="travel-booking-step-1" role="tabpanel">
+                                    <h4>Datos sobre el viaje</h4>
+                                    <div class="traveler-info">
+                                        <div class="row gy-3">
+                                            <div class="col-md-6">
+                                                <label>Fecha de salida</label>
+                                                {{ form.fecha_salida }}
+                                                {% if form.fecha_salida.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.fecha_salida.errors.as_text }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-12">
+                                                <label>Ciudad origen</label>
+                                                {{ form.ciudad_salida }}
+                                                {% if form.ciudad_salida.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.ciudad_salida.errors.as_text }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label>Ciudad destino</label>
+                                                {{ form.ciudad_llegada }}
+                                                {% if form.ciudad_llegada.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.ciudad_llegada.errors.as_text }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label>Plazas disponibles</label>
+                                                {{ form.plazas_disponibles }}
+                                                {% if form.plazas_disponibles.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.plazas_disponibles.errors.as_text }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label>Hora de salida (00:00 - 23:59 hrs)</label>
+                                                {{ form.hora }}
+                                                {% if form.hora.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.hora.errors.as_text }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label>Quieres viajar con mascotas?</label>
+                                                {{ form.acepto_mascotas }}
+                                                {% if form.acepto_mascotas.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.acepto_mascotas.errors.as_text }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label>Regresas el mismo día</label>
+                                                {{ form.regreso_hoy }}
+                                                {% if form.regreso_hoy.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.regreso_hoy.errors.as_text }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-step tab-pane fade" id="travel-booking-step-2" role="tabpanel">
+                                    <h4>Detalles sobre la actividad</h4>
+                                    <div class="traveler-info">
+                                        <div class="row gy-3">
+                                            <div class="col-md-6">
+                                                <label>Nombre del sector</label>
+                                                {{ form.nombre_sector }}
+                                                {% if form.nombre_sector.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.nombre_sector.errors.as_text }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label>Nivel que quieres escalar</label>
+                                                {{ form.nivel_escalada }}
+                                                {% if form.nivel_escalada.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.nivel_escalada.errors.as_text }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-step tab-pane fade" id="travel-booking-step-3" role="tabpanel">
+                                    <h4>Información extra para quien te acompañe</h4>
+                                    <div class="traveler-info">
+                                        <div class="row gy-3">
+                                            <div class="col-12">
+                                                <label>Info extra del viaje</label>
+                                                {{ form.descripcion_viaje }}
+                                                {% if form.descripcion_viaje.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.descripcion_viaje.errors.as_text }}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="form-navigation">
+                                            <button type="submit" class="btn btn-book">
+                                                <strong>
+                                                    {% if modo_edicion %}
+                                                    Guardar cambios
+                                                    {% else %}
+                                                    Crear viaje
+                                                    {% endif %}
+                                                </strong>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </section>
+
+{% endblock content %}

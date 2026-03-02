@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Solicitudes pendientes
+{% endblock %}
+
+{% block content %}
+<section id="blog-comments" class="blog-comments section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="blog-comments-4">
+          <div class="comments-header">
+              <h3 class="title">Solicitudes pendientes</h3>
+          </div>
+
+          {% if tiene_solicitudes_pendientes %}
+
+            {% if solicitudes_recibidas %}
+
+            <h4>Personas que han solicitado plaza/as en tu viaje </h4>
+
+          {% for solicitud in solicitudes_recibidas %}
+          <h4>{{ solicitud.quien_solicita.nombre }}</h4>
+
+          <div class="comments-container">
+            <div class="comment-thread">
+              <div class="comment-box">
+                <div class="comment-wrapper">
+                  <div class="avatar-wrapper">
+                      {% if solicitud.quien_solicita.get_sexo_display == 'Masculino' %}
+                      <img src="{% static 'img/profile-boy-icon.png' %}" alt="Avatar" loading="lazy">
+                      {% else %}
+                      <img src="{% static 'img/profile-girl-icon.png' %}" alt="Avatar" loading="lazy">
+                      {% endif %}
+                  </div>
+                  <div class="comment-content">
+                    <div class="comment-header">
+                      <div class="user-info">
+                        <h4>
+                         {{ solicitud.viaje.ciudad_salida_corto }}
+                          <i class="bi bi-arrow-right mx-2"></i>
+                          {{ solicitud.viaje.ciudad_llegada_corto }}
+                          </h4>
+                          <span class="time-badge">
+                          <i class="bi bi-clock"></i>
+                            {{ solicitud.viaje.hora }}
+                           &nbsp
+                          <i class="bi bi-calendar"></i>
+                          {{ solicitud.viaje.fecha_salida }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="comment-body d-flex justify-content-between align-items-center">
+                        <p>
+                            <strong>Número de plazas solicitadas: {{ solicitud.numero_plazas }}</strong>
+                        </p>
+
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'perfil-detail' solicitud.quien_solicita.usuario.id %}"
+                               class="btn-accent-bottom">
+                              Ver perfil
+                            </a>
+
+                            <form method="post"
+                                  action="{% url 'solicitud-accion' solicitud.id 'Aceptada' %}"
+                                  class="d-inline">
+                              {% csrf_token %}
+                              <button type="submit" class="btn-accent-bottom">
+                                Aceptar solicitud
+                              </button>
+                            </form>
+
+                            <form method="post"
+                                  action="{% url 'solicitud-accion' solicitud.id 'Rechazada' %}"
+                                  class="d-inline">
+                              {% csrf_token %}
+                              <button type="submit" class="btn-accent-bottom">
+                                Rechazar solicitud
+                              </button>
+                            </form>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+              {% endif %}
+
+              {% if solicitudes_enviadas %}
+
+              <h4>Viajes en los que has solicitado plaza/as</h4>
+
+          {% for solicitud in solicitudes_enviadas %}
+          <div class="comments-container">
+            <div class="comment-thread">
+              <div class="comment-box">
+                <div class="comment-wrapper">
+                  <div class="comment-content">
+                    <div class="comment-header">
+                      <div class="user-info">
+                        <h4>
+                         {{ solicitud.viaje.ciudad_salida_corto }}
+                          <i class="bi bi-arrow-right mx-2"></i>
+                          {{ solicitud.viaje.ciudad_llegada_corto }}
+                          </h4>
+                          <span class="time-badge">
+                          <i class="bi bi-clock"></i>
+                            {{ solicitud.viaje.hora }}
+                           &nbsp
+                          <i class="bi bi-calendar"></i>
+                          {{ solicitud.viaje.fecha_salida }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="comment-body d-flex justify-content-between align-items-center">
+                        <p>
+                            <strong>Número de plazas solicitadas: {{ solicitud.numero_plazas }}</strong>
+                        </p>
+                        <strong>Estado de la solicitud: {{ solicitud.estado }}</strong>
+
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'viaje-detail-no-propietario' solicitud.viaje.id %}"
+                           class="btn-accent-bottom">
+                          Ver viaje
+                        </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+              {% endif %}
+
+          {% else %}
+                <h4>Aún no hay ninguna solicitud</h4>
+          {% endif %}
+
+        </div>
+    </div>
+</section>
+{% endblock %}

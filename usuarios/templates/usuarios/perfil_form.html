@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Crea tu perfil{% endblock %}
+
+{% block content %}
+    <section id="travel-booking" class="travel-booking section">
+
+        <form action="" method="post" class="booking-form" data-aos="fade-up" data-aos-delay="300" novalidate>
+         {% csrf_token %}
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h1>¡Bienvenido/a! Antes de ponernos a escalar contigo, necesitamos que crees tu perfil!</h1>
+                    <div class="booking-form-container mt-5">
+                        <div class="booking-progress nav nav-tabs" data-aos="fade-up" data-aos-delay="200">
+                            <button type="button" class="step nav-link active" data-bs-toggle="tab" data-bs-target="#travel-booking-step-1" aria-current="page">
+                                <span class="step-number">1</span>
+                                <span class="step-title">Datos personales</span>
+                            </button>
+                            <button type="button" class="step nav-link" data-bs-toggle="tab" data-bs-target="#travel-booking-step-2">
+                                <span class="step-number">2</span>
+                                <span class="step-title">Datos de escalada</span>
+                            </button>
+                            <button typer="button" class="step nav-link" data-bs-toggle="tab" data-bs-target="#travel-booking-step-3">
+                                <span class="step-number">3</span>
+                                <span class="step-title">Hospedaje</span>
+                            </button>
+                        </div>
+
+
+                        <div class="tab-content" id="bookingTabContent">
+                            <div class="form-step tab-pane fade show active" id="travel-booking-step-1" role="tabpanel">
+                                <h4>Datos personales</h4>
+                                <div class="traveler-info">
+                                    <div class="row gy-3">
+
+                                        <div class="col-md-6">
+                                            <label>Teléfono</label>
+                                            {{ form.telefono }}
+                                            {% if form.telefono.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.telefono.errors.as_text }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Fecha de nacimiento</label>
+                                            {{ form.fecha_nacimiento }}
+                                            {% if form.fecha_nacimiento.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.fecha_nacimiento.errors.as_text }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Sexo</label>
+                                            {{ form.sexo }}
+                                            {% if form.sexo.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.sexo.errors.as_text }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-step tab-pane fade" id="travel-booking-step-2" role="tabpanel">
+                                <h4>Datos de tu escalada</h4>
+                                <div class="traveler-info">
+                                    <div class="row gy-3">
+                                        <div class="col-md-6">
+                                            <label>¿Cuándo comenzaste a escalar en roca?</label>
+                                            {{ form.inicio_escalada }}
+                                            {% if form.inicio_escalada.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.inicio_escalada.errors.as_text }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Perfil 8anu</label>
+                                            {{ form.perfil_8anu }}
+                                            {% if form.perfil_8anu.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.perfil_8anu.errors.as_text }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="row gy-3">
+                                            <div class="col-12">
+                                                <label>Descripción</label>
+                                                {{ form.descripcion }}
+                                                {% if form.descripcion.errors %}
+                                                    <div class="text-danger">
+                                                        {{ form.descripcion.errors.as_text }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label>Material propio</label>
+                                            {{ form.material_propio }}
+                                            {% if form.material_propio.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.material_propio.errors.as_text }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-step tab-pane fade" id="travel-booking-step-3" role="tabpanel">
+                                <h4>¿Nos podemos quedar en tu casa?</h4>
+                                <div class="traveler-info">
+                                    <div class="row gy-3">
+                                        <div class="col-md-6">
+                                            <label>Estoy disponible para recibir gente en mi casa</label>
+                                            {{ form.recibir_gente }}
+                                            {% if form.recibir_gente.errors %}
+                                                <div class="text-danger">
+                                                    {{ form.recibir_gente.errors.as_text }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="form-navigation">
+                                            <button type="submit" class="btn btn-book"><strong>Crear Perfil</strong></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}

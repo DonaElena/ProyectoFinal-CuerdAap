@@ -1,0 +1,28 @@
+<div class="modal fade" id="modalDelete{{ viaje.pk }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #ffffff;">
+
+      <div class="modal-body text-center py-4">
+        <p style="color: #6f0f3e; font-size: 1.2rem; font-weight: 600;">
+          ¿Estás seguro/a que no quieres escalar?
+        </p>
+      </div>
+
+      <div class="modal-footer justify-content-center border-0 pb-4">
+        <button type="button" class="btn mx-2" data-bs-dismiss="modal"
+                style="background-color: #2a6e0d; color: #ffffff;">
+          No
+        </button>
+
+        <form method="post" action="{% url 'viaje-delete' viaje.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn mx-2"
+                  style="background-color: #2a6e0d; color: #ffffff;">
+            Sí
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

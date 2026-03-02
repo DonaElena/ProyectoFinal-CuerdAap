@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Editar Perfil{% endblock %}
+
+{% block content %}
+<section id="contact" class="contact section">
+
+    <div class="container">
+        <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="300">
+            <div class="col-lg-10">
+                <div class="contact-form-wrapper">
+                    <h2 class="text-center mb-4">Edita tu perfil!</h2>
+                    <form action="" method="post" class="django-email-form">
+                        {% csrf_token %}
+                        <div class="row g-3">
+
+                            <!-- Nombre -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label d-flex align-items-center">
+                                        <i class="bi bi-person me-2"></i><strong>Nombre</strong>
+                                    </label>
+                                    {{ perfil.usuario.first_name }}
+                                </div>
+                            </div>
+
+                            <!-- Apellidos -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label d-flex align-items-center">
+                                        <i class="bi bi-person me-2"></i><strong>Apellidos</strong>
+                                    </label>
+                                    {{ perfil.usuario.last_name }}
+                                </div>
+                            </div>
+
+
+
+                            <!-- Teléfono -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label d-flex align-items-center">
+                                        <i class="bi bi-telephone me-2"></i><strong>Teléfono</strong>
+                                    </label>
+                                    {{ form.telefono }}
+                                </div>
+                            </div>
+
+                            <!-- Fecha de nacimiento -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label d-flex align-items-center">
+                                        <i class="bi bi-calendar me-2"></i><strong>Fecha de nacimiento</strong>
+                                    </label>
+                                    {{ form.fecha_nacimiento }}
+                                </div>
+                            </div>
+
+                            <!-- Inicio escalada -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label d-flex align-items-center">
+                                        <i class="bi bi-calendar-check me-2"></i><strong>Inicio escalada</strong>
+                                    </label>
+                                    {{ form.inicio_escalada }}
+                                </div>
+                            </div>
+
+                            <!-- Sexo -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label d-flex align-items-center">
+                                        <i class="bi bi-gender-ambiguous me-2"></i><strong>Sexo</strong>
+                                    </label>
+                                    {{ form.sexo }}
+                                </div>
+                            </div>
+
+                            <!-- Material propio -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label d-flex align-items-center">
+                                        <i class="bi bi-box-seam me-2"></i><strong>Material propio</strong>
+                                    </label>
+                                    {{ form.material_propio }}
+                                </div>
+                            </div>
+
+                            <!-- Recibir gente -->
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label d-flex align-items-center">
+                                        <i class="bi bi-people me-2"></i><strong>Recibir gente</strong>
+                                    </label>
+                                    {{ form.recibir_gente }}
+                                </div>
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label class="form-label d-flex align-items-center">
+                                        <i class="bi bi-pencil me-2"></i><strong>Descripción</strong>
+                                    </label>
+                                    {{ form.descripcion }}
+                                </div>
+                            </div>
+
+                            <!-- Botón enviar -->
+                            <div class="col-12 text-center mt-3">
+                                <button type="submit" class="btn btn-primary btn-submit">Guardar cambios</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

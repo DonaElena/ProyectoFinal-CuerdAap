@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contáctanos{% endblock %}
+
+{% block content %}
+ <section id="contact" class="contact section">
+
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+    <!-- Boxes de info de contacto -->
+    <div class="row gy-4 mb-5">
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="contact-info-box">
+          <div class="icon-box">
+            <i class="bi bi-geo-alt"></i>
+          </div>
+          <div class="info-content">
+            <h4>Nuestra dirección</h4>
+            <p>Carrer Nou 3, Margalef (España) 43371</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="contact-info-box">
+          <div class="icon-box">
+            <i class="bi bi-envelope"></i>
+          </div>
+          <div class="info-content">
+            <h4>Correo electrónico</h4>
+            <p>contacto@cuerdapp.com</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="contact-info-box">
+          <div class="icon-box">
+            <i class="bi bi-headset"></i>
+          </div>
+          <div class="info-content">
+            <h4>Horario oficina de turismo</h4>
+            <p>Todos los días : 9:00 - 16:00</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Google Maps -->
+  <div class="map-section" data-aos="fade-up" data-aos-delay="200">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2998.096417622712!2d0.7507656112790605!3d41.285006002220314!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a6cd5627499c97%3A0x957b36be3056a0da!2sCarrer%20Nou%2C%203%2C%2043371%20Margalef%2C%20Tarragona!5e0!3m2!1ses!2ses!4v1759326851999!5m2!1ses!2ses"
+      width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+
+  <div class="container form-container-overlap">
+    <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="300">
+      <div class="col-lg-10">
+
+        {% if messages %}
+           {% for mensaje in messages %}
+              {% if 'formulario contacto enviado' in mensaje.tags %}
+                 <div class="contact-form-wrapper">
+                     <h2>{{ mensaje }}</h2>
+                     <p>Estamos atendiendo tu mensaje, nos pondremos en contacto contigo!</p>
+                 <div class="col-12 text-center">
+                   <a href="{% url 'home' %}" class="btn btn-primary btn-submit">CUERDAPP HOME</a>
+                </div>
+                </div>
+              {% elif 'error envio contacto' in mensaje.tags %}
+                 <h2>{{ mensaje }}</h2>
+              {% endif %}
+           {% endfor %}
+
+        {% else %}
+          <div class="contact-form-wrapper">
+            <h2 class="text-center mb-4">Estamos aquí para resolver tus dudas!</h2>
+            <form action="" method="post" class="django-email-form">
+              {% csrf_token %}
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="input-with-icon">
+                    <i class="bi bi-person"></i>
+                    {{ form.nombre }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="input-with-icon">
+                    <i class="bi bi-envelope"></i>
+                    {{ form.email }}
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="input-with-icon">
+                    <i class="bi bi-text-left"></i>
+                    {{ form.asunto }}
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="input-with-icon">
+                    <i class="bi bi-chat-dots message-icon"></i>
+                    {{ form.mensaje }}
+                  </div>
+                </div>
+                <div class="col-12 text-center">
+                  <button type="submit" class="btn btn-primary btn-submit">ENVIAR MENSAJE</button>
+                </div>
+              </div>
+            </form>
+          </div>
+       {% endif %}
+      </div>
+    </div>
+  </div>
+
+</section>
+{% endblock %}

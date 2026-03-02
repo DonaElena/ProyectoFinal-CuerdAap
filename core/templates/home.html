@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+    {% block content %}
+
+        <section class="section" id="about">
+            <div class="container">
+                <div class="section-title">
+                    <div>¿Te gustaría escalar hoy?</div>
+                </div>
+                <!-- Botón 'Sí' -->
+                 <div class="d-flex justify-content-center mt-4">
+                    <div>
+                        <a class="btn-accent-block" href="{% url 'buscar-viaje' %}">Sí!</a>
+
+                     </div>
+                    </div>
+                 </div>
+            </div>
+        </section>
+
+    {% endblock %}
+
