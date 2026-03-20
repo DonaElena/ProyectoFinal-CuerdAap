@@ -70,6 +70,12 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware'
 ]
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    }
+}
+
 ROOT_URLCONF = 'CuerdApp.urls'
 
 TEMPLATES = [

@@ -1,5 +1,40 @@
 import requests
+from django.core.cache import cache
 from dal import autocomplete
+from viajes.models import Ciudad
+
+def busqueda_en_cache(query):
+
+    """ Función auxiliar que verifica si la búsqueda introducida por el usuario está en cache.
+
+        Utiliza el objeto cache del módulo cache de Django.
+    """
+    cache_key = f'autocomplete_{query}'
+    en_cache = cache.get(cache_key)
+
+    if en_cache:
+        return en_cache
+
+def busqueda_en_bbdd(query):
+
+    """
+       Función auxiliar que busca en la BBDD poblada con ciudades si existe la ciudad
+    """
+
+    ciudades_db = Ciudad.objects.filter(
+        nombre_ciudad__icontains=query)[:5]
+
+    if ciudades_db.exists():
+        return [ciudad.nombre_ciudad for ciudad in ciudades_db]
+
+def guardar_en_cache(resultados_api,query):
+
+    """
+       Función auxiliar para cachear búsquedas en de ciudades para las que aún
+       no se ha publicado ningún viaje.
+       Optimiza búsquedas de viajes cuyas ciudades aún no han sido origen ni destino
+    """
+    cache.set(f'autocomplete_{query}',resultados_api,timeout=7200)
 
 class CiudadAutocomplete(autocomplete.Select2ListView):
     """
@@ -43,39 +78,51 @@ class CiudadAutocomplete(autocomplete.Select2ListView):
      """
 
     def get_list(self):
+
         query = self.q
 
-        if not query:
+        # Comenzar petición a la API a partir de 3 letras.
+
+        if not query or len(query) < 3:
             return []
+
+        query_normalizada = query.lower().strip()
+
+        resultados_cache = busqueda_en_cache(query_normalizada)
+        if resultados_cache:
+            return resultados_cache
+
+        resultados_bbdd = busqueda_en_bbdd(query_normalizada)
+        if resultados_bbdd:
+            return resultados_bbdd
 
         url = "https://nominatim.openstreetmap.org/search"
         params = {
             "format": "json",
             "addressdetails": 1,
             "limit": 5,
-            "q": query
-        }
+            "q": query_normalizada
+                }
 
         headers = {
             'User-Agent': 'ProyectoFinal',
             'Accept-Language': 'es-ES, es'
-        }
+                 }
 
-        response = requests.get(url, params=params, headers=headers)
-        datos = response.json()
+        try:
+            response = requests.get(url, params=params, headers=headers, timeout=5)
+            response.raise_for_status()
+            datos = response.json()
 
-        if not datos:
-            return ["Búsqueda sin resultados"]
+        except requests.RequestException:
 
-        resultados = []
-        for lugar in datos:
+            return ['Intenta buscar tu viaje más tarde']
 
-            ciudad = lugar.get('display_name')
-
-            if ciudad:
-                resultados.append(ciudad)
+        resultados = [lugar.get('display_name') for lugar in datos if lugar.get('display_name')]
 
         if not resultados:
-            resultados.append("Búsqueda sin resultados")
+            resultados.append('Búsqueda sin resultado')
+        else:
+            guardar_en_cache(resultados,query_normalizada)
 
         return resultados

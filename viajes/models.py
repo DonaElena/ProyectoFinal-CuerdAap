@@ -1,5 +1,5 @@
-
-from django.db import models
+from django.core.exceptions import ValidationError
+from django.db import models, transaction
 from django.db.models import ForeignKey, F, Sum, Q
 from django.db.models.functions import Coalesce
 from django.urls import reverse
@@ -103,7 +103,8 @@ class ViajeOferta (models.Model):
 
     @property
     def plazas_restantes(self):
-        plazas_ocupadas = self.reservas.aggregate(
+        plazas_ocupadas = Reserva.objects.filter(
+        solicitud__viaje=self).aggregate(
             total=Coalesce(Sum('numero_plazas'), 0)
         )['total']
         return self.plazas_disponibles - plazas_ocupadas
@@ -206,27 +207,46 @@ class Solicitud(models.Model):
     quien_solicita = models.ForeignKey(Perfil, on_delete=models.CASCADE,
                                        related_name='reserva_solicitada')
     viaje = models.ForeignKey(ViajeOferta, on_delete=models.CASCADE)
-    numero_plazas = models.IntegerField()
+    numero_plazas = models.PositiveIntegerField()
     estado = models.CharField(max_length=10, choices=ESTADO, default='Pendiente')
     fecha_hora_solicitud = models.DateTimeField(auto_now_add=True)
 
     objects = SolicitudQuerySet.as_manager()
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields = ['quien_solicita', 'viaje'],
+                condition=Q(estado = 'Pendiente'),
+                name= 'unica_solicitud_por_usuario_edo_pendiente'
+            )
+        ]
+
     def crear_reserva(self):
+
+        if self.numero_plazas > self.viaje.plazas_restantes:
+            raise ValidationError('No hay plazas suficientes')
 
         Reserva.objects.create(
             viaje = self.viaje,
             quien_reserva = self.quien_solicita,
-            numero_plazas = self.numero_plazas
-        )
+            numero_plazas = self.numero_plazas)
 
     def procesar_solicitud(self,estado):
 
-        self.estado = estado
-        self.save()
+        with transaction.atomic():
 
-        if estado == 'Aceptada':
-            self.crear_reserva()
+            self.estado = estado
+            self.save()
+
+            if estado == 'Aceptada' and not hasattr(self, 'reserva'):
+
+                viaje = ViajeOferta.objects.select_for_update().get(id=self.viaje.id)
+
+                if self.numero_plazas > viaje.plazas_restantes:
+                    raise ValidationError('No hay plazas suficientes')
+
+                self.crear_reserva()
 
 class ReservaQuerySet(models.QuerySet, NoCaducadoMixin):
     """
@@ -277,10 +297,16 @@ class Reserva(models.Model):
                      de viajes cuyo perfil es propietario.
         """
 
-    viaje = models.ForeignKey(ViajeOferta, on_delete=models.CASCADE,
-                              related_name='reservas')
-    quien_reserva = models.ForeignKey(Perfil, on_delete=models.CASCADE)
-    numero_plazas = models.IntegerField()
+    solicitud = models.OneToOneField(Solicitud, on_delete=models.CASCADE, related_name='reserva')
+    numero_plazas = models.PositiveIntegerField()
+
+    @property
+    def quien_reserva(self):
+        return self.solicitud.quien_solicita
+
+    @property
+    def viaje(self):
+        return self.solicitud.viaje
 
     objects = ReservaQuerySet.as_manager()
 

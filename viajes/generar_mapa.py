@@ -4,8 +4,6 @@ import requests
 from viajes.models import Ciudad
 
 
-
-
 def buscar_coordenadas_api(ciudad):
     """
        Obtiene las coordenadas geográficas (latitud y longitud) de una ciudad
@@ -43,16 +41,22 @@ def buscar_coordenadas_api(ciudad):
         'Accept-Language': 'es-ES, es'
     }
 
-    response = requests.get(url, params=params, headers=headers)
-    datos = response.json()
+    try:
+        response = requests.get(url, params=params, headers=headers, timeout=5)
+        response.raise_for_status()
+        datos = response.json()
 
-    if not datos:
-        return None,None
+        if not datos:
+            return None, None
 
-    latitud = float(datos[0]['lat'])
-    longitud = float(datos[0]['lon'])
+        latitud = float(datos[0]['lat'])
+        longitud = float(datos[0]['lon'])
 
-    return latitud, longitud
+        return latitud, longitud
+
+    except requests.RequestException:
+        return None, None
+
 
 class MapaViaje:
     """
@@ -119,9 +123,13 @@ class MapaViaje:
                 latitud = float(ciudad_query.latitud)
                 longitud = float(ciudad_query.longitud)
                 coordenadas.append((latitud, longitud))
+
             except Ciudad.DoesNotExist:
+
                 latitud, longitud = buscar_coordenadas_api(ciudad)
+
                 if latitud is not None and longitud is not None:
+
                     Ciudad.objects.create(
                         nombre_ciudad=ciudad,
                         latitud=latitud,

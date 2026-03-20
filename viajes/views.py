@@ -425,7 +425,7 @@ class SolicitudAccion(LoginRequiredMixin,View):
             return redirect(reverse('reservas-list', kwargs={'usuario_id': request.user.id})
 )
 
-        return redirect('solicitudes-pendientes')
+        return redirect('solicitudes-pendientes', kwargs={'usuario_id': request.user.id})
 
 class MostrarReservas(EsPropietarioMixin,RevisarPermisosMixin, DetailView):
     """
